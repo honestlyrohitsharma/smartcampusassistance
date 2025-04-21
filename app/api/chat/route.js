@@ -1,5 +1,5 @@
-import { OpenAIStream, StreamingTextResponse } from "ai"
-import OpenAI from "openai"
+import { OpenAI } from "openai"
+import { StreamingTextResponse } from "ai"
 
 // Create an OpenAI API client
 const openai = new OpenAI({
@@ -30,10 +30,7 @@ export async function POST(req) {
     })
 
     // Convert the response into a friendly text-stream
-    const stream = OpenAIStream(response)
-
-    // Respond with the stream
-    return new StreamingTextResponse(stream)
+    return new StreamingTextResponse(response)
   } catch (error) {
     console.error("Error in chat API:", error)
     return new Response(JSON.stringify({ error: error.message }), {

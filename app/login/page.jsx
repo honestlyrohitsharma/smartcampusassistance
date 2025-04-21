@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,7 +12,12 @@ import { GraduationCap, UserCircle, Sparkles } from "lucide-react"
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
+  const [isClient, setIsClient] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const handleLogin = async (e, userType) => {
     e.preventDefault()
@@ -22,7 +27,9 @@ export default function LoginPage() {
     setTimeout(() => {
       setIsLoading(false)
       // Store user type in localStorage for conditional rendering
-      localStorage.setItem("userType", userType)
+      if (typeof window !== "undefined") {
+        localStorage.setItem("userType", userType)
+      }
       router.push("/")
     }, 1500)
   }
