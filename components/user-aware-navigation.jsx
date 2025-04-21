@@ -4,7 +4,19 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { BookOpen, Bell, MapPin, UserCheck, Calendar, MessageSquare, LogOut, User, Sparkles } from "lucide-react"
+import {
+  BookOpen,
+  Bell,
+  MapPin,
+  UserCheck,
+  Calendar,
+  MessageSquare,
+  LogOut,
+  User,
+  Sparkles,
+  FileText,
+  Clock,
+} from "lucide-react"
 
 export default function UserAwareNavigation() {
   const [userType, setUserType] = useState(null)
@@ -39,7 +51,7 @@ export default function UserAwareNavigation() {
             <Sparkles className="h-5 w-5 text-white" />
           </div>
           <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 text-transparent bg-clip-text">
-            Campus Fest 2025
+            Smart Campus Assistant
           </h1>
         </Link>
         <div className="flex items-center gap-4">
@@ -131,6 +143,20 @@ export default function UserAwareNavigation() {
               <span className="hidden sm:inline">Attendance</span>
             </Button>
           </Link>
+          <Link href="/class-timetable">
+            <Button
+              variant={pathname === "/class-timetable" ? "default" : "outline"}
+              size="sm"
+              className={
+                pathname === "/class-timetable"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-500"
+                  : "border-purple-200 text-purple-600 hover:bg-purple-50"
+              }
+            >
+              <Clock className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Class Timetable</span>
+            </Button>
+          </Link>
           {userType === "student" ? (
             <Link href="/class-schedule">
               <Button
@@ -147,20 +173,36 @@ export default function UserAwareNavigation() {
               </Button>
             </Link>
           ) : (
-            <Link href="/teacher-availability">
-              <Button
-                variant={pathname === "/teacher-availability" ? "default" : "outline"}
-                size="sm"
-                className={
-                  pathname === "/teacher-availability"
-                    ? "bg-gradient-to-r from-purple-600 to-pink-500"
-                    : "border-purple-200 text-purple-600 hover:bg-purple-50"
-                }
-              >
-                <Calendar className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Teacher Schedule</span>
-              </Button>
-            </Link>
+            <>
+              <Link href="/teacher-availability">
+                <Button
+                  variant={pathname === "/teacher-availability" ? "default" : "outline"}
+                  size="sm"
+                  className={
+                    pathname === "/teacher-availability"
+                      ? "bg-gradient-to-r from-purple-600 to-pink-500"
+                      : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                  }
+                >
+                  <Calendar className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">Teacher Schedule</span>
+                </Button>
+              </Link>
+              <Link href="/student-attendance">
+                <Button
+                  variant={pathname === "/student-attendance" ? "default" : "outline"}
+                  size="sm"
+                  className={
+                    pathname === "/student-attendance"
+                      ? "bg-gradient-to-r from-purple-600 to-pink-500"
+                      : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                  }
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">Student Attendance</span>
+                </Button>
+              </Link>
+            </>
           )}
           <Link href="/chat">
             <Button

@@ -42,7 +42,7 @@ export default function LoginPage() {
               <Sparkles className="h-6 w-6" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Campus Fest 2025</CardTitle>
+          <CardTitle className="text-2xl font-bold">Smart Campus Assistant</CardTitle>
           <CardDescription className="text-purple-100">Login to access your campus dashboard</CardDescription>
         </CardHeader>
         <CardContent className="pt-6">

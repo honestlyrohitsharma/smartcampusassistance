@@ -4,19 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  Bell,
-  BookOpen,
-  Calendar,
-  MapPin,
-  MessageSquare,
-  UserCheck,
-  Music,
-  Trophy,
-  Ticket,
-  Users,
-  Sparkles,
-} from "lucide-react"
+import { Bell, BookOpen, Calendar, MapPin, UserCheck, FileText, Trophy, Users, Sparkles, Clock } from "lucide-react"
 import ChatbotButton from "@/components/chatbot-button"
 import { Button } from "@/components/ui/button"
 
@@ -56,26 +44,26 @@ export default function Home() {
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2 flex items-center">
                 <Sparkles className="h-8 w-8 mr-2" />
-                Campus Fest 2025
+                Smart Campus Assistant
               </h1>
-              <p className="text-xl opacity-90">May 15-20, 2025 • Join the celebration!</p>
+              <p className="text-xl opacity-90">Your complete campus management solution</p>
             </div>
             <div className="hidden md:block">
-              <Button className="bg-white text-purple-600 hover:bg-white/90">Get Tickets</Button>
+              <Button className="bg-white text-purple-600 hover:bg-white/90">View Schedule</Button>
             </div>
           </div>
           <div className="mt-8 flex flex-wrap gap-4">
             <div className="flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
               <Calendar className="h-5 w-5 mr-2" />
-              <span>5 Days of Events</span>
-            </div>
-            <div className="flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
-              <Music className="h-5 w-5 mr-2" />
-              <span>10+ Performances</span>
+              <span>Academic Calendar</span>
             </div>
             <div className="flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
               <Trophy className="h-5 w-5 mr-2" />
-              <span>20+ Competitions</span>
+              <span>Campus Events</span>
+            </div>
+            <div className="flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+              <Users className="h-5 w-5 mr-2" />
+              <span>Student Resources</span>
             </div>
           </div>
         </div>
@@ -122,6 +110,21 @@ export default function Home() {
               </Card>
             </Link>
 
+            <Link href="/class-timetable" className="block">
+              <Card className="h-full hover:shadow-lg transition-shadow border-l-4 border-l-indigo-500">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Clock className="h-5 w-5 mr-2 text-indigo-600" />
+                    Class Timetable
+                  </CardTitle>
+                  <CardDescription>View class schedules and teachers</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-500">CSE A, B, C - 1st Year 2nd Semester</p>
+                </CardContent>
+              </Card>
+            </Link>
+
             <Link href="/campus-map" className="block">
               <Card className="h-full hover:shadow-lg transition-shadow border-l-4 border-l-green-500">
                 <CardHeader>
@@ -132,7 +135,7 @@ export default function Home() {
                   <CardDescription>Navigate around campus</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-500">Interactive map with event locations</p>
+                  <p className="text-sm text-gray-500">Interactive map with building locations</p>
                 </CardContent>
               </Card>
             </Link>
@@ -168,86 +171,21 @@ export default function Home() {
                 </Card>
               </Link>
             ) : (
-              <Link href="/teacher-availability" className="block">
+              <Link href="/student-attendance" className="block">
                 <Card className="h-full hover:shadow-lg transition-shadow border-l-4 border-l-rose-500">
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <Calendar className="h-5 w-5 mr-2 text-rose-600" />
-                      Teacher Schedule
+                      <FileText className="h-5 w-5 mr-2 text-rose-600" />
+                      Student Attendance
                     </CardTitle>
-                    <CardDescription>Check teacher schedules and replacements</CardDescription>
+                    <CardDescription>Take and manage student attendance</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-500">1 replacement scheduled today</p>
+                    <p className="text-sm text-gray-500">Record attendance and generate reports</p>
                   </CardContent>
                 </Card>
               </Link>
             )}
-
-            <Link href="/chat" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow border-l-4 border-l-cyan-500">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <MessageSquare className="h-5 w-5 mr-2 text-cyan-600" />
-                    Chat Assistant
-                  </CardTitle>
-                  <CardDescription>Get quick answers to your questions</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-500">Ask about fest events, schedules, and more</p>
-                </CardContent>
-              </Card>
-            </Link>
-          </div>
-        </section>
-
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold mb-6">Featured Fest Events</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Music className="h-5 w-5 mr-2" />
-                  Main Stage Concert
-                </CardTitle>
-                <CardDescription className="text-purple-100">Featuring top artists</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="mb-2">May 18, 2025 • 7:00 PM</p>
-                <p className="text-sm opacity-90">Main Quadrangle</p>
-                <Button className="mt-4 bg-white text-purple-700 hover:bg-white/90">Get Tickets</Button>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-pink-500 to-rose-600 text-white">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Trophy className="h-5 w-5 mr-2" />
-                  Hackathon Finals
-                </CardTitle>
-                <CardDescription className="text-pink-100">24-hour coding challenge</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="mb-2">May 16-17, 2025 • 10:00 AM</p>
-                <p className="text-sm opacity-90">CS Building</p>
-                <Button className="mt-4 bg-white text-pink-700 hover:bg-white/90">Register Team</Button>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-amber-500 to-orange-600 text-white">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Users className="h-5 w-5 mr-2" />
-                  Cultural Night
-                </CardTitle>
-                <CardDescription className="text-amber-100">Performances & food festival</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="mb-2">May 19, 2025 • 6:00 PM</p>
-                <p className="text-sm opacity-90">Amphitheater</p>
-                <Button className="mt-4 bg-white text-amber-700 hover:bg-white/90">View Details</Button>
-              </CardContent>
-            </Card>
           </div>
         </section>
 
@@ -304,18 +242,18 @@ export default function Home() {
             <div className="mb-4 md:mb-0">
               <h2 className="text-2xl font-bold flex items-center">
                 <Sparkles className="h-6 w-6 mr-2" />
-                Campus Fest 2025
+                Smart Campus Assistant
               </h2>
-              <p className="opacity-80">May 15-20, 2025 • The biggest campus celebration</p>
+              <p className="opacity-80">Your complete campus management solution</p>
             </div>
             <div className="flex gap-4">
               <Button variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600">
-                <Ticket className="h-4 w-4 mr-2" />
-                Get Tickets
+                <Calendar className="h-4 w-4 mr-2" />
+                Academic Calendar
               </Button>
               <Button variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600">
                 <Users className="h-4 w-4 mr-2" />
-                Volunteer
+                Support
               </Button>
             </div>
           </div>
