@@ -11,29 +11,21 @@ import { Button } from "@/components/ui/button"
 export default function Home() {
   const [userType, setUserType] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [isClient, setIsClient] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    setIsClient(true)
-
-    // Check if user is logged in - only on client side
-    if (typeof window !== "undefined") {
-      const storedUserType = localStorage.getItem("userType")
-      setUserType(storedUserType)
-    }
-
+    // Check if user is logged in
+    const storedUserType = localStorage.getItem("userType")
+    setUserType(storedUserType)
     setIsLoading(false)
-  }, [])
 
-  // Effect to handle redirect after state is updated
-  useEffect(() => {
-    if (!isLoading && !userType && isClient) {
+    // If not logged in, redirect to login page
+    if (!storedUserType && !isLoading) {
       router.push("/login")
     }
-  }, [isLoading, userType, router, isClient])
+  }, [isLoading, router])
 
-  if (isLoading || !isClient) {
+  if (isLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
 

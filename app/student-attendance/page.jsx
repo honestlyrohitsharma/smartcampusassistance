@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -16,30 +16,11 @@ import ChatbotButton from "@/components/chatbot-button"
 export default function StudentAttendancePage() {
   const router = useRouter()
   const [selectedClass, setSelectedClass] = useState("")
-  const [selectedDate, setSelectedDate] = useState("")
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0])
   const [searchQuery, setSearchQuery] = useState("")
   const [attendanceData, setAttendanceData] = useState({})
   const [savedAttendance, setSavedAttendance] = useState([])
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [userType, setUserType] = useState(null)
-  const [isClient, setIsClient] = useState(false)
-
-  // Set current date when component mounts on client
-  useEffect(() => {
-    setIsClient(true)
-    setSelectedDate(new Date().toISOString().split("T")[0])
-
-    // Only access localStorage on the client side
-    if (typeof window !== "undefined") {
-      const storedUserType = localStorage.getItem("userType")
-      setUserType(storedUserType)
-
-      // Redirect if not a teacher
-      if (storedUserType !== "teacher") {
-        router.push("/")
-      }
-    }
-  }, [router])
 
   // Sample class data
   const classes = [
@@ -51,16 +32,16 @@ export default function StudentAttendancePage() {
 
   // Sample student data
   const students = [
-    { id: "S001", name: "Rahul Sharma", roll: "CS2023001" },
-    { id: "S002", name: "Priya Patel", roll: "CS2023002" },
-    { id: "S003", name: "Amit Kumar", roll: "CS2023003" },
-    { id: "S004", name: "Sneha Gupta", roll: "CS2023004" },
-    { id: "S005", name: "Vikram Singh", roll: "CS2023005" },
-    { id: "S006", name: "Neha Verma", roll: "CS2023006" },
-    { id: "S007", name: "Raj Malhotra", roll: "CS2023007" },
-    { id: "S008", name: "Ananya Desai", roll: "CS2023008" },
-    { id: "S009", name: "Karan Mehta", roll: "CS2023009" },
-    { id: "S010", name: "Divya Sharma", roll: "CS2023010" },
+    { id: "S001", name: "Rohit Sharma", roll: "CSC001" },
+    { id: "S002", name: "Shreya Ranjan", roll: "CSC002" },
+    { id: "S003", name: "Soukarsh Dutta", roll: "CSC003" },
+    { id: "S004", name: "Sania Akatrai", roll: "CSC004" },
+    { id: "S005", name: "Vikram Singh", roll: "CSC005" },
+    { id: "S006", name: "Neha Verma", roll: "CSC006" },
+    { id: "S007", name: "Raj Malhotra", roll: "CSC007" },
+    { id: "S008", name: "Ananya Desai", roll: "CSC008" },
+    { id: "S009", name: "Karan Mehta", roll: "CSC009" },
+    { id: "S010", name: "Divya Sharma", roll: "CSC010" },
   ]
 
   // Sample attendance history
@@ -137,13 +118,20 @@ export default function StudentAttendancePage() {
     alert("PDF generation would happen here. In a real application, this would download a PDF with attendance details.")
   }
 
-  // Show loading state until client-side code runs
-  if (!isClient) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
-  }
+  // Check if user is a teacher (in a real app, this would be more robust)
+  const [userType, setUserType] = useState(null)
 
-  // Only render the page content if we're on the client and the user is a teacher
-  if (isClient && userType !== "teacher") {
+  useState(() => {
+    const storedUserType = localStorage.getItem("userType")
+    setUserType(storedUserType)
+
+    // Redirect if not a teacher
+    if (storedUserType !== "teacher" && typeof window !== "undefined") {
+      router.push("/")
+    }
+  }, [])
+
+  if (userType !== "teacher") {
     return <div className="min-h-screen flex items-center justify-center">Checking permissions...</div>
   }
 

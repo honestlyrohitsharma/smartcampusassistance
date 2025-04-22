@@ -25,15 +25,12 @@ export default function UserAwareNavigation() {
 
   useEffect(() => {
     setIsClient(true)
-    if (typeof window !== "undefined") {
-      const storedUserType = localStorage.getItem("userType")
-      setUserType(storedUserType)
-    }
+    const storedUserType = localStorage.getItem("userType")
+    setUserType(storedUserType)
   }, [])
 
-  // If not on client-side yet, return null to prevent hydration mismatch
   if (!isClient) {
-    return null
+    return null // Return null on server-side to prevent hydration mismatch
   }
 
   // If on login page, don't show navigation
@@ -42,10 +39,8 @@ export default function UserAwareNavigation() {
   }
 
   const handleLogout = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("userType")
-      window.location.href = "/login"
-    }
+    localStorage.removeItem("userType")
+    window.location.href = "/login"
   }
 
   return (
