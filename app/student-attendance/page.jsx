@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -16,11 +16,13 @@ import Footer from "@/components/footer"
 export default function StudentAttendancePage() {
   const router = useRouter()
   const [selectedClass, setSelectedClass] = useState("")
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0])
+  const [selectedDate, setSelectedDate] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
   const [attendanceData, setAttendanceData] = useState({})
   const [savedAttendance, setSavedAttendance] = useState([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [userType, setUserType] = useState(null)
+  const [isClient, setIsClient] = useState(false)
 
   // Sample class data
   const classes = [
@@ -75,6 +77,24 @@ export default function StudentAttendancePage() {
     },
   ]
 
+  // Set up client-side state
+  useEffect(() => {
+    setIsClient(true)
+    const today = new Date().toISOString().split("T")[0]
+    setSelectedDate(today)
+
+    // Check if user is a teacher (in a real app, this would be more robust)
+    if (typeof window !== "undefined") {
+      const storedUserType = localStorage.getItem("userType")
+      setUserType(storedUserType)
+
+      // Redirect if not a teacher
+      if (storedUserType !== "teacher") {
+        router.push("/")
+      }
+    }
+  }, [router])
+
   const filteredStudents = students.filter(
     (student) =>
       student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -118,20 +138,13 @@ export default function StudentAttendancePage() {
     alert("PDF generation would happen here. In a real application, this would download a PDF with attendance details.")
   }
 
-  // Check if user is a teacher (in a real app, this would be more robust)
-  const [userType, setUserType] = useState(null)
+  // Show loading state until client-side code is ready
+  if (!isClient) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+  }
 
-  useState(() => {
-    const storedUserType = localStorage.getItem("userType")
-    setUserType(storedUserType)
-
-    // Redirect if not a teacher
-    if (storedUserType !== "teacher" && typeof window !== "undefined") {
-      router.push("/")
-    }
-  }, [])
-
-  if (userType !== "teacher") {
+  // Redirect if not a teacher
+  if (isClient && userType !== "teacher") {
     return <div className="min-h-screen flex items-center justify-center">Checking permissions...</div>
   }
 

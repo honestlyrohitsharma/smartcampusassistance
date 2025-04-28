@@ -16,15 +16,20 @@ export default function TeacherAvailabilityPage() {
   const [selectedDay, setSelectedDay] = useState("today")
   const [searchQuery, setSearchQuery] = useState("")
   const [teacherData, setTeacherData] = useState(teachers)
+  const [isClient, setIsClient] = useState(false)
 
   // Load any saved availability data from localStorage
   useEffect(() => {
-    const savedAvailability = localStorage.getItem("teacherAvailability")
-    const savedOfficeHours = localStorage.getItem("teacherOfficeHours")
+    setIsClient(true)
 
-    if (savedAvailability && savedOfficeHours) {
-      // In a real app, we would update the teacher data with the saved availability
-      console.log("Saved availability data found")
+    if (typeof window !== "undefined") {
+      const savedAvailability = localStorage.getItem("teacherAvailability")
+      const savedOfficeHours = localStorage.getItem("teacherOfficeHours")
+
+      if (savedAvailability && savedOfficeHours) {
+        // In a real app, we would update the teacher data with the saved availability
+        console.log("Saved availability data found")
+      }
     }
   }, [])
 
@@ -50,6 +55,8 @@ export default function TeacherAvailabilityPage() {
 
   // Simulate current status based on time of day
   const getCurrentStatus = (teacher) => {
+    if (!isClient) return "unknown"
+
     const now = new Date()
     const hour = now.getHours()
 
@@ -69,6 +76,10 @@ export default function TeacherAvailabilityPage() {
       // Outside working hours
       return "unavailable"
     }
+  }
+
+  if (!isClient) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
 
   return (

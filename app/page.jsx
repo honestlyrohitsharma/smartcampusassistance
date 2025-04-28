@@ -14,34 +14,39 @@ export default function Home() {
   const [userData, setUserData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [currentClass, setCurrentClass] = useState(null)
+  const [isClient, setIsClient] = useState(false)
   const router = useRouter()
 
   // First effect - Handle initial data loading and login check
   useEffect(() => {
+    setIsClient(true)
+
     // Check if user is logged in
-    const storedUserType = localStorage.getItem("userType")
-    const storedUserData = localStorage.getItem("userData")
+    if (typeof window !== "undefined") {
+      const storedUserType = localStorage.getItem("userType")
+      const storedUserData = localStorage.getItem("userData")
 
-    setUserType(storedUserType)
+      setUserType(storedUserType)
 
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData)
-      setUserData(parsedUserData)
+      if (storedUserData) {
+        const parsedUserData = JSON.parse(storedUserData)
+        setUserData(parsedUserData)
+      }
+
+      setIsLoading(false)
     }
-
-    setIsLoading(false)
   }, [])
 
   // Second effect - Handle redirect if not logged in
   useEffect(() => {
-    if (!isLoading && !userType) {
+    if (!isLoading && !userType && typeof window !== "undefined") {
       router.push("/login")
     }
   }, [isLoading, router, userType])
 
   // Third effect - Update current class when userData changes
   useEffect(() => {
-    if (!userData) return
+    if (!userData || !isClient) return
 
     if (userType === "student" && userData.section) {
       // Convert section like "CSE-A" to "cse-a" for timetable lookup
@@ -52,11 +57,11 @@ export default function Home() {
       const currentClassInfo = getCurrentClass(null, "teacher", userData.shortName)
       setCurrentClass(currentClassInfo)
     }
-  }, [userData, userType])
+  }, [userData, userType, isClient])
 
   // Fourth effect - Set up interval for updating current class
   useEffect(() => {
-    if (!userData) return
+    if (!userData || !isClient) return
 
     // Update current class every minute
     const intervalId = setInterval(() => {
@@ -71,13 +76,13 @@ export default function Home() {
     }, 60000)
 
     return () => clearInterval(intervalId)
-  }, [userData, userType])
+  }, [userData, userType, isClient])
 
-  if (isLoading) {
+  if (!isClient || isLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
 
-  if (!userType) {
+  if (isClient && !userType) {
     return null // Will redirect to login
   }
 

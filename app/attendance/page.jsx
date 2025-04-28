@@ -7,7 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button"
 import { Calendar, Check, X } from "lucide-react"
 import Footer from "@/components/footer"
-
 import {
   ChartContainer,
   ChartLegend,
@@ -25,26 +24,30 @@ export default function AttendancePage() {
   const [userData, setUserData] = useState(null)
   const [attendancePercentage, setAttendancePercentage] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
+    setIsClient(true)
     // Get user data from localStorage
-    const storedUserData = localStorage.getItem("userData")
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData)
-      setUserData(parsedUserData)
+    if (typeof window !== "undefined") {
+      const storedUserData = localStorage.getItem("userData")
+      if (storedUserData) {
+        const parsedUserData = JSON.parse(storedUserData)
+        setUserData(parsedUserData)
 
-      // If student, calculate average attendance
-      if (parsedUserData.attendance) {
-        const avgAttendance =
-          Object.values(parsedUserData.attendance).reduce((sum, val) => sum + Number(val), 0) /
-          Object.values(parsedUserData.attendance).length
-        setAttendancePercentage(avgAttendance)
+        // If student, calculate average attendance
+        if (parsedUserData.attendance) {
+          const avgAttendance =
+            Object.values(parsedUserData.attendance).reduce((sum, val) => sum + Number(val), 0) /
+            Object.values(parsedUserData.attendance).length
+          setAttendancePercentage(avgAttendance)
+        } else {
+          // Default for teachers or if no attendance data
+          setAttendancePercentage(87)
+        }
       } else {
-        // Default for teachers or if no attendance data
-        setAttendancePercentage(87)
+        setAttendancePercentage(87) // Default
       }
-    } else {
-      setAttendancePercentage(87) // Default
     }
 
     setIsLoading(false)
@@ -116,7 +119,7 @@ export default function AttendancePage() {
 
   const lowestSubject = getLowestSubject()
 
-  if (isLoading) {
+  if (!isClient || isLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
 

@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Clock, Save } from "lucide-react"
-import { toast } from "@/components/ui/use-toast"
 import Footer from "@/components/footer"
 
 export default function SetAvailabilityPage() {
@@ -16,6 +15,7 @@ export default function SetAvailabilityPage() {
   const [userType, setUserType] = useState(null)
   const [userData, setUserData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isClient, setIsClient] = useState(false)
   const [availabilityData, setAvailabilityData] = useState({
     monday: { available: true, startTime: "09:00", endTime: "17:00", location: "Room 301" },
     tuesday: { available: true, startTime: "09:00", endTime: "17:00", location: "Room 301" },
@@ -36,20 +36,24 @@ export default function SetAvailabilityPage() {
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
+    setIsClient(true)
+
     // Check if user is logged in and is a teacher
-    const storedUserType = localStorage.getItem("userType")
-    const storedUserData = localStorage.getItem("userData")
+    if (typeof window !== "undefined") {
+      const storedUserType = localStorage.getItem("userType")
+      const storedUserData = localStorage.getItem("userData")
 
-    setUserType(storedUserType)
-    if (storedUserData) {
-      setUserData(JSON.parse(storedUserData))
-    }
+      setUserType(storedUserType)
+      if (storedUserData) {
+        setUserData(JSON.parse(storedUserData))
+      }
 
-    setIsLoading(false)
+      setIsLoading(false)
 
-    // Redirect if not a teacher
-    if (storedUserType !== "teacher" && typeof window !== "undefined") {
-      router.push("/")
+      // Redirect if not a teacher
+      if (storedUserType !== "teacher") {
+        router.push("/")
+      }
     }
   }, [router])
 
@@ -96,22 +100,21 @@ export default function SetAvailabilityPage() {
     // Simulate API call
     setTimeout(() => {
       // In a real app, this would save to a database
-      localStorage.setItem("teacherAvailability", JSON.stringify(availabilityData))
-      localStorage.setItem("teacherOfficeHours", JSON.stringify(officeHours))
+      if (typeof window !== "undefined") {
+        localStorage.setItem("teacherAvailability", JSON.stringify(availabilityData))
+        localStorage.setItem("teacherOfficeHours", JSON.stringify(officeHours))
+      }
 
       setIsSaving(false)
-      toast({
-        title: "Availability saved",
-        description: "Your availability settings have been updated successfully.",
-      })
+      alert("Availability settings have been updated successfully.")
     }, 1000)
   }
 
-  if (isLoading) {
+  if (!isClient || isLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
 
-  if (userType !== "teacher") {
+  if (isClient && userType !== "teacher") {
     return <div className="min-h-screen flex items-center justify-center">Checking permissions...</div>
   }
 

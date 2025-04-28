@@ -1,29 +1,76 @@
 "use client"
 
-import { useChat } from "ai/react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SendHorizontal, Bot, User, Sparkles } from "lucide-react"
-import { useState } from "react"
 import Footer from "@/components/footer"
 
 export default function ChatPage() {
   const [showSuggestions, setShowSuggestions] = useState(true)
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat()
+  const [messages, setMessages] = useState([])
+  const [input, setInput] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleInputChange = (e) => {
+    setInput(e.target.value)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!input.trim()) return
+
+    // Add user message to chat
+    const userMessage = { id: Date.now(), role: "user", content: input }
+    setMessages((prev) => [...prev, userMessage])
+
+    // Clear input and show loading
+    setInput("")
+    setIsLoading(true)
+    setShowSuggestions(false)
+
+    try {
+      // Send message to API
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: [...messages, userMessage].map(({ role, content }) => ({ role, content })),
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to get response")
+      }
+
+      // Get response text
+      const data = await response.text()
+
+      // Add assistant message to chat
+      setMessages((prev) => [...prev, { id: Date.now(), role: "assistant", content: data }])
+    } catch (error) {
+      console.error("Error in chat:", error)
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now(), role: "assistant", content: "Sorry, I encountered an error. Please try again." },
+      ])
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleQuickReply = (question) => {
-    // Create a synthetic event to submit the form with the question
-    const syntheticEvent = {
-      preventDefault: () => {},
-      currentTarget: {
-        elements: {
-          message: { value: question },
-        },
-      },
-    }
+    // Set the input value to the question
+    setInput(question)
 
+    // Submit the form with the question
+    const syntheticEvent = { preventDefault: () => {} }
     handleSubmit(syntheticEvent)
+
     setShowSuggestions(false)
   }
 
