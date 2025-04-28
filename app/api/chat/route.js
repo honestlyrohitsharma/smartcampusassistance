@@ -1,43 +1,42 @@
-import { streamText } from "ai"
-import { openai } from "@ai-sdk/openai"
+import { OpenAIStream, StreamingTextResponse } from "ai"
+import OpenAI from "openai"
+
+// Create an OpenAI API client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+})
 
 export const runtime = "nodejs"
 
 export async function POST(req) {
   try {
-    // Check if OpenAI API key is available
-    if (!process.env.OPENAI_API_KEY) {
-      return new Response(
-        JSON.stringify({
-          error: "OpenAI API key is missing. Please add OPENAI_API_KEY to your environment variables.",
-        }),
-        { status: 500, headers: { "Content-Type": "application/json" } },
-      )
-    }
-
     const { messages } = await req.json()
 
-    // Create a system message for the campus assistant
-    const systemMessage = {
-      role: "system",
-      content: `You are a helpful campus assistant for a university. 
-      You can provide information about assignments, notices, campus maps, attendance, 
-      teacher availability, and other campus-related queries.
-      You're also knowledgeable about the upcoming Campus Fest 2025.
-      Be concise, friendly, and helpful. If you don't know something, suggest where the student might find that information.`,
-    }
-
-    // Use the AI SDK to stream the response
-    const result = streamText({
-      model: openai("gpt-4o-mini"),
-      messages: [systemMessage, ...messages],
+    // Request the OpenAI API for the response
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      stream: true,
+      messages: [
+        {
+          role: "system",
+          content: `You are a helpful campus assistant for a university. 
+          You can provide information about assignments, notices, campus maps, attendance, 
+          teacher availability, and other campus-related queries.
+          You're also knowledgeable about the upcoming Campus Fest 2025.
+          Be concise, friendly, and helpful. If you don't know something, suggest where the student might find that information.`,
+        },
+        ...messages,
+      ],
     })
 
-    // Return the response as a stream
-    return result.toDataStreamResponse()
+    // Convert the response into a friendly text-stream
+    const stream = OpenAIStream(response)
+
+    // Respond with the stream
+    return new StreamingTextResponse(stream)
   } catch (error) {
     console.error("Error in chat API:", error)
-    return new Response(JSON.stringify({ error: error.message || "An error occurred while processing your request" }), {
+    return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     })

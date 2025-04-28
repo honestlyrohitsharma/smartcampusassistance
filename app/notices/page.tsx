@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CalendarDays } from "lucide-react"
-import ChatbotButton from "@/components/chatbot-button"
+import Footer from "@/components/footer"
 
 export default function NoticesPage() {
   return (
@@ -239,7 +239,7 @@ export default function NoticesPage() {
         </Tabs>
       </main>
 
-      <ChatbotButton />
+      <Footer />
     </div>
   )
 }

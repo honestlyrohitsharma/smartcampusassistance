@@ -1,12 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Calendar, Check, X } from "lucide-react"
-import ChatbotButton from "@/components/chatbot-button"
+import Footer from "@/components/footer"
 
 import {
   ChartContainer,
@@ -22,6 +22,33 @@ import {
 export default function AttendancePage() {
   const [selectedCourse, setSelectedCourse] = useState("all")
   const [selectedMonth, setSelectedMonth] = useState("may")
+  const [userData, setUserData] = useState(null)
+  const [attendancePercentage, setAttendancePercentage] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Get user data from localStorage
+    const storedUserData = localStorage.getItem("userData")
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData)
+      setUserData(parsedUserData)
+
+      // If student, calculate average attendance
+      if (parsedUserData.attendance) {
+        const avgAttendance =
+          Object.values(parsedUserData.attendance).reduce((sum, val) => sum + Number(val), 0) /
+          Object.values(parsedUserData.attendance).length
+        setAttendancePercentage(avgAttendance)
+      } else {
+        // Default for teachers or if no attendance data
+        setAttendancePercentage(87)
+      }
+    } else {
+      setAttendancePercentage(87) // Default
+    }
+
+    setIsLoading(false)
+  }, [])
 
   // Sample attendance data
   const attendanceData = [
@@ -42,14 +69,24 @@ export default function AttendancePage() {
     { date: "May 15", status: "present" },
   ]
 
-  // Sample chart data
-  const chartData = [
-    { subject: "Database Systems", attendance: 85 },
-    { subject: "Web Technologies", attendance: 92 },
-    { subject: "Artificial Intelligence", attendance: 78 },
-    { subject: "Operating Systems", attendance: 88 },
-    { subject: "Computer Networks", attendance: 95 },
-  ]
+  // Get chart data from user data if available
+  const getChartData = () => {
+    if (userData && userData.attendance) {
+      return Object.entries(userData.attendance).map(([subject, percentage]) => ({
+        subject,
+        attendance: percentage,
+      }))
+    }
+
+    // Default chart data
+    return [
+      { subject: "Database Systems", attendance: 85 },
+      { subject: "Web Technologies", attendance: 92 },
+      { subject: "Artificial Intelligence", attendance: 78 },
+      { subject: "Operating Systems", attendance: 88 },
+      { subject: "Computer Networks", attendance: 95 },
+    ]
+  }
 
   // Sample monthly trend data
   const trendData = [
@@ -57,8 +94,31 @@ export default function AttendancePage() {
     { month: "Feb", attendance: 88 },
     { month: "Mar", attendance: 85 },
     { month: "Apr", attendance: 82 },
-    { month: "May", attendance: 87 },
+    { month: "May", attendance: attendancePercentage },
   ]
+
+  // Find lowest subject
+  const getLowestSubject = () => {
+    if (userData && userData.attendance) {
+      const entries = Object.entries(userData.attendance)
+      const lowest = entries.reduce((min, current) => (current[1] < min[1] ? current : min), entries[0])
+      return {
+        subject: lowest[0],
+        percentage: lowest[1],
+      }
+    }
+
+    return {
+      subject: "Artificial Intelligence",
+      percentage: 78,
+    }
+  }
+
+  const lowestSubject = getLowestSubject()
+
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -77,11 +137,20 @@ export default function AttendancePage() {
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <div className="text-4xl font-bold">87%</div>
+                <div className="text-4xl font-bold">{Math.round(attendancePercentage)}%</div>
                 <div className="text-sm text-gray-500">Required: 75%</div>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                <div className="bg-green-600 h-2.5 rounded-full" style={{ width: "87%" }}></div>
+                <div
+                  className={`h-2.5 rounded-full ${
+                    attendancePercentage >= 85
+                      ? "bg-green-600"
+                      : attendancePercentage >= 75
+                        ? "bg-amber-500"
+                        : "bg-red-500"
+                  }`}
+                  style={{ width: `${Math.min(100, attendancePercentage)}%` }}
+                ></div>
               </div>
             </CardContent>
           </Card>
@@ -107,11 +176,20 @@ export default function AttendancePage() {
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <div className="text-4xl font-bold">78%</div>
-                <div className="text-sm text-gray-500">Artificial Intelligence</div>
+                <div className="text-4xl font-bold">{lowestSubject.percentage}%</div>
+                <div className="text-sm text-gray-500">{lowestSubject.subject}</div>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                <div className="bg-amber-500 h-2.5 rounded-full" style={{ width: "78%" }}></div>
+                <div
+                  className={`h-2.5 rounded-full ${
+                    lowestSubject.percentage >= 85
+                      ? "bg-green-600"
+                      : lowestSubject.percentage >= 75
+                        ? "bg-amber-500"
+                        : "bg-red-500"
+                  }`}
+                  style={{ width: `${lowestSubject.percentage}%` }}
+                ></div>
               </div>
             </CardContent>
           </Card>
@@ -196,7 +274,7 @@ export default function AttendancePage() {
                 <ChartContainer className="h-full">
                   <ChartTitle>Attendance Percentage by Subject</ChartTitle>
                   <ChartBar
-                    data={chartData}
+                    data={getChartData()}
                     xAxis={<ChartXAxis dataKey="subject" />}
                     yAxis={<ChartYAxis />}
                     dataKey="attendance"
@@ -234,7 +312,7 @@ export default function AttendancePage() {
         </Tabs>
       </main>
 
-      <ChatbotButton />
+      <Footer />
     </div>
   )
 }

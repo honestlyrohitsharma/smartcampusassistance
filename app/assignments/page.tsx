@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Clock, Download, Upload } from "lucide-react"
-import ChatbotButton from "@/components/chatbot-button"
+import Footer from "@/components/footer"
 
 export default function AssignmentsPage() {
   return (
@@ -164,7 +164,7 @@ export default function AssignmentsPage() {
         </Tabs>
       </main>
 
-      <ChatbotButton />
+      <Footer />
     </div>
   )
 }

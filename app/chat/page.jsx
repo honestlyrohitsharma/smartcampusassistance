@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SendHorizontal, Bot, User, Sparkles } from "lucide-react"
 import { useState } from "react"
+import Footer from "@/components/footer"
 
 export default function ChatPage() {
   const [showSuggestions, setShowSuggestions] = useState(true)
@@ -142,6 +143,7 @@ export default function ChatPage() {
           </CardContent>
         </Card>
       </main>
+      <Footer />
     </div>
   )
 }

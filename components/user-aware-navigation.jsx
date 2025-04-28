@@ -10,23 +10,41 @@ import {
   MapPin,
   UserCheck,
   Calendar,
-  MessageSquare,
   LogOut,
   User,
   Sparkles,
   FileText,
   Clock,
+  Settings,
+  GraduationCap,
+  BookOpenCheck,
 } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 
 export default function UserAwareNavigation() {
   const [userType, setUserType] = useState(null)
+  const [userData, setUserData] = useState(null)
   const [isClient, setIsClient] = useState(false)
   const pathname = usePathname()
 
   useEffect(() => {
     setIsClient(true)
     const storedUserType = localStorage.getItem("userType")
+    const storedUserData = localStorage.getItem("userData")
+
     setUserType(storedUserType)
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData))
+    }
   }, [])
 
   if (!isClient) {
@@ -40,7 +58,19 @@ export default function UserAwareNavigation() {
 
   const handleLogout = () => {
     localStorage.removeItem("userType")
+    localStorage.removeItem("userData")
     window.location.href = "/login"
+  }
+
+  // Get user initials for avatar
+  const getInitials = (name) => {
+    if (!name) return "U"
+    return name
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2)
   }
 
   return (
@@ -55,11 +85,81 @@ export default function UserAwareNavigation() {
           </h1>
         </Link>
         <div className="flex items-center gap-4">
-          {userType && (
-            <div className="hidden md:flex items-center gap-2 text-sm text-gray-500">
-              <User className="h-4 w-4" />
-              <span>Logged in as {userType}</span>
+          {userData && (
+            <div className="hidden md:flex items-center gap-2">
+              {userType === "teacher" && (
+                <div className="bg-purple-100 text-purple-800 px-4 py-2 rounded-md font-bold flex items-center">
+                  <BookOpenCheck className="h-5 w-5 mr-2 text-purple-600" />
+                  Teacher: {userData.name}
+                </div>
+              )}
+              {userType === "student" && (
+                <div className="bg-purple-50 px-3 py-1.5 rounded-full flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4 text-purple-600" />
+                  <span className="text-sm font-medium text-purple-800">{userData.name}</span>
+                  <Badge variant="outline" className="bg-purple-100 text-purple-800 border-purple-200">
+                    {userData.role || userType}
+                  </Badge>
+                  {userData.section && (
+                    <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+                      {userData.section}
+                    </Badge>
+                  )}
+                </div>
+              )}
             </div>
+          )}
+          {userData && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-purple-100 text-purple-600">
+                      {getInitials(userData.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{userData.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{userData.email}</p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Badge variant="outline" className="bg-purple-100 text-purple-800 border-purple-200">
+                        {userData.role || userType}
+                      </Badge>
+                      {userData.section && (
+                        <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+                          {userData.section}
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-xs leading-none text-muted-foreground mt-1">
+                      {userType === "student" ? `Roll: ${userData.roll}` : `ID: ${userData.id}`}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                {userType === "teacher" && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/set-availability">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Set Availability</span>
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
           <Button
             variant="outline"
@@ -202,20 +302,34 @@ export default function UserAwareNavigation() {
                   <span className="hidden sm:inline">Student Attendance</span>
                 </Button>
               </Link>
+              <Link href="/set-availability">
+                <Button
+                  variant={pathname === "/set-availability" ? "default" : "outline"}
+                  size="sm"
+                  className={
+                    pathname === "/set-availability"
+                      ? "bg-gradient-to-r from-purple-600 to-pink-500"
+                      : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                  }
+                >
+                  <Settings className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">Set Availability</span>
+                </Button>
+              </Link>
             </>
           )}
-          <Link href="/chat">
+          <Link href="/test-login">
             <Button
-              variant={pathname === "/chat" ? "default" : "outline"}
+              variant={pathname === "/test-login" ? "default" : "outline"}
               size="sm"
               className={
-                pathname === "/chat"
+                pathname === "/test-login"
                   ? "bg-gradient-to-r from-purple-600 to-pink-500"
                   : "border-purple-200 text-purple-600 hover:bg-purple-50"
               }
             >
-              <MessageSquare className="h-4 w-4 mr-2" />
-              <span className="hidden sm:inline">Chat</span>
+              <User className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Test Login</span>
             </Button>
           </Link>
         </nav>

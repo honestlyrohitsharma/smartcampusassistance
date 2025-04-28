@@ -8,23 +8,47 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Checkbox } from "@/components/ui/checkbox"
-import { GraduationCap, UserCircle, Sparkles } from "lucide-react"
+import { GraduationCap, UserCircle, Sparkles, AlertCircle, User } from "lucide-react"
+import { authenticateUser } from "@/lib/users-data"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [studentId, setStudentId] = useState("S001")
+  const [studentPassword, setStudentPassword] = useState("student123")
+  const [teacherEmail, setTeacherEmail] = useState("rohitrnps@gmail.com")
+  const [teacherPassword, setTeacherPassword] = useState("teacher123")
   const router = useRouter()
 
   const handleLogin = async (e, userType) => {
     e.preventDefault()
     setIsLoading(true)
+    setError("")
 
-    // Simulate login process
-    setTimeout(() => {
-      setIsLoading(false)
-      // Store user type in localStorage for conditional rendering
+    // Get credentials based on user type
+    const credentials =
+      userType === "student"
+        ? { id: studentId, password: studentPassword }
+        : { id: teacherEmail, password: teacherPassword }
+
+    // Authenticate user
+    const user = authenticateUser(credentials.id, credentials.password, userType)
+
+    if (user) {
+      // Store user type and data in localStorage
       localStorage.setItem("userType", userType)
-      router.push("/")
-    }, 1500)
+      localStorage.setItem("userData", JSON.stringify(user))
+
+      // Redirect to dashboard
+      setTimeout(() => {
+        setIsLoading(false)
+        router.push("/")
+      }, 1000)
+    } else {
+      setIsLoading(false)
+      setError("Invalid credentials. Please try again.")
+    }
   }
 
   return (
@@ -46,6 +70,14 @@ export default function LoginPage() {
           <CardDescription className="text-purple-100">Login to access your campus dashboard</CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
           <Tabs defaultValue="student" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger
@@ -68,12 +100,13 @@ export default function LoginPage() {
               <form onSubmit={(e) => handleLogin(e, "student")}>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="student-id">Student ID</Label>
+                    <Label htmlFor="student-id">Student ID / Roll Number</Label>
                     <Input
                       id="student-id"
-                      placeholder="Enter your student ID"
+                      placeholder="Enter your student ID or roll number"
                       required
-                      defaultValue="S2023045"
+                      value={studentId}
+                      onChange={(e) => setStudentId(e.target.value)}
                       className="border-purple-200 focus-visible:ring-purple-500"
                     />
                   </div>
@@ -84,7 +117,8 @@ export default function LoginPage() {
                       type="password"
                       placeholder="••••••••"
                       required
-                      defaultValue="campus123"
+                      value={studentPassword}
+                      onChange={(e) => setStudentPassword(e.target.value)}
                       className="border-purple-200 focus-visible:ring-purple-500"
                     />
                   </div>
@@ -114,13 +148,14 @@ export default function LoginPage() {
               <form onSubmit={(e) => handleLogin(e, "teacher")}>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="teacher-email">Email</Label>
+                    <Label htmlFor="teacher-email">Email / Teacher ID</Label>
                     <Input
                       id="teacher-email"
-                      type="email"
-                      placeholder="Enter your email"
+                      type="text"
+                      placeholder="Enter your email or ID"
                       required
-                      defaultValue="professor@campus.edu"
+                      value={teacherEmail}
+                      onChange={(e) => setTeacherEmail(e.target.value)}
                       className="border-purple-200 focus-visible:ring-purple-500"
                     />
                   </div>
@@ -131,7 +166,8 @@ export default function LoginPage() {
                       type="password"
                       placeholder="••••••••"
                       required
-                      defaultValue="faculty123"
+                      value={teacherPassword}
+                      onChange={(e) => setTeacherPassword(e.target.value)}
                       className="border-purple-200 focus-visible:ring-purple-500"
                     />
                   </div>
@@ -157,6 +193,39 @@ export default function LoginPage() {
               </form>
             </TabsContent>
           </Tabs>
+
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+            <h3 className="text-sm font-medium text-blue-800 mb-2">Test Accounts</h3>
+            <div className="space-y-2 text-xs text-blue-700">
+              <p>
+                <strong>Student:</strong> ID: S001, Password: student123
+              </p>
+              <p>
+                <strong>Student:</strong> ID: S002, Password: student123
+              </p>
+              <p>
+                <strong>Teacher:</strong> Email: rohitrnps@gmail.com, Password: teacher123
+              </p>
+              <p>
+                <strong>Teacher:</strong> Email: shreyaranjan9431@gmail.com, Password: teacher123
+              </p>
+            </div>
+          </div>
+          <div className="mt-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+                <User className="h-5 w-5 text-purple-600" />
+              </div>
+              <div>
+                <h3 className="font-medium">Mrs. Sonali</h3>
+                <p className="text-sm text-purple-700">Principal, SVIST</p>
+              </div>
+            </div>
+            <p className="text-sm text-purple-700">
+              The Principal has the authority to create new student IDs for login access. New students should contact
+              the Principal's office for ID creation and system access.
+            </p>
+          </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-center text-sm text-gray-500">

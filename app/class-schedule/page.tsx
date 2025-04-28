@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Calendar, Clock, BookOpen, MapPin } from "lucide-react"
-import ChatbotButton from "@/components/chatbot-button"
+import Footer from "@/components/footer"
 
 export default function ClassSchedulePage() {
   const [selectedDay, setSelectedDay] = useState("today")
@@ -121,6 +121,13 @@ export default function ClassSchedulePage() {
           course: "CS350: Web Technologies Lab",
           teacher: "Prof. Michael Chen",
           location: "Lab 2",
+          status: "upcoming",
+        },
+        {
+          time: "1:00 PM - 2:30 PM",
+          course: "HMHU 201: ENGLISH",
+          teacher: "SMD",
+          location: "Room 313",
           status: "upcoming",
         },
       ],
@@ -277,7 +284,7 @@ export default function ClassSchedulePage() {
         </Tabs>
       </main>
 
-      <ChatbotButton />
+      <Footer />
     </div>
   )
 }

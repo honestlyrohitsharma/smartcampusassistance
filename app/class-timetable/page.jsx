@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Clock, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import ChatbotButton from "@/components/chatbot-button"
+import Footer from "@/components/footer"
 
 export default function ClassTimetablePage() {
   const [selectedDay, setSelectedDay] = useState("all")
@@ -423,7 +423,7 @@ export default function ClassTimetablePage() {
         </Tabs>
       </main>
 
-      <ChatbotButton />
+      <Footer />
     </div>
   )
 }

@@ -5,25 +5,73 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Bell, BookOpen, Calendar, MapPin, UserCheck, FileText, Trophy, Users, Sparkles, Clock } from "lucide-react"
-import ChatbotButton from "@/components/chatbot-button"
 import { Button } from "@/components/ui/button"
+import Footer from "@/components/footer"
+import { getCurrentClass } from "@/lib/users-data"
 
 export default function Home() {
   const [userType, setUserType] = useState(null)
+  const [userData, setUserData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [currentClass, setCurrentClass] = useState(null)
   const router = useRouter()
 
+  // First effect - Handle initial data loading and login check
   useEffect(() => {
     // Check if user is logged in
     const storedUserType = localStorage.getItem("userType")
-    setUserType(storedUserType)
-    setIsLoading(false)
+    const storedUserData = localStorage.getItem("userData")
 
-    // If not logged in, redirect to login page
-    if (!storedUserType && !isLoading) {
+    setUserType(storedUserType)
+
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData)
+      setUserData(parsedUserData)
+    }
+
+    setIsLoading(false)
+  }, [])
+
+  // Second effect - Handle redirect if not logged in
+  useEffect(() => {
+    if (!isLoading && !userType) {
       router.push("/login")
     }
-  }, [isLoading, router])
+  }, [isLoading, router, userType])
+
+  // Third effect - Update current class when userData changes
+  useEffect(() => {
+    if (!userData) return
+
+    if (userType === "student" && userData.section) {
+      // Convert section like "CSE-A" to "cse-a" for timetable lookup
+      const sectionKey = userData.section.toLowerCase()
+      const currentClassInfo = getCurrentClass(sectionKey, "student")
+      setCurrentClass(currentClassInfo)
+    } else if (userType === "teacher" && userData.shortName) {
+      const currentClassInfo = getCurrentClass(null, "teacher", userData.shortName)
+      setCurrentClass(currentClassInfo)
+    }
+  }, [userData, userType])
+
+  // Fourth effect - Set up interval for updating current class
+  useEffect(() => {
+    if (!userData) return
+
+    // Update current class every minute
+    const intervalId = setInterval(() => {
+      if (userType === "student" && userData.section) {
+        const sectionKey = userData.section.toLowerCase()
+        const currentClassInfo = getCurrentClass(sectionKey, "student")
+        setCurrentClass(currentClassInfo)
+      } else if (userType === "teacher" && userData.shortName) {
+        const currentClassInfo = getCurrentClass(null, "teacher", userData.shortName)
+        setCurrentClass(currentClassInfo)
+      }
+    }, 60000)
+
+    return () => clearInterval(intervalId)
+  }, [userData, userType])
 
   if (isLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>
@@ -47,6 +95,28 @@ export default function Home() {
                 Smart Campus Assistant
               </h1>
               <p className="text-xl opacity-90">Your complete campus management solution</p>
+
+              {userData && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <div className="flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                    <Users className="h-5 w-5 mr-2" />
+                    <span>Welcome, {userData.name}</span>
+                  </div>
+                  <div className="flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                    {userType === "student" ? (
+                      <>
+                        <BookOpen className="h-5 w-5 mr-2" />
+                        <span>{userData.section} Student</span>
+                      </>
+                    ) : (
+                      <>
+                        <BookOpen className="h-5 w-5 mr-2" />
+                        <span>{userData.designation}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
             <div className="hidden md:block">
               <Button className="bg-white text-purple-600 hover:bg-white/90">View Schedule</Button>
@@ -70,6 +140,59 @@ export default function Home() {
       </div>
 
       <main className="container mx-auto px-4 py-8">
+        {/* Current Class Highlight */}
+        {currentClass ? (
+          <Card className="mb-8 border-l-4 border-l-green-500 bg-green-50">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center">
+                <Clock className="h-5 w-5 mr-2 text-green-600" />
+                Current Class
+              </CardTitle>
+              <CardDescription>
+                {userType === "student" ? "You are currently in this class" : "You are currently teaching this class"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Subject</p>
+                  <p className="font-medium text-lg">{currentClass.subject}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Time</p>
+                  <p className="font-medium">{currentClass.time}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-500">{userType === "student" ? "Teacher" : "Location"}</p>
+                  <p className="font-medium">
+                    {userType === "student" ? currentClass.teacher : currentClass.section?.toUpperCase() || "Unknown"}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="mb-8 border-l-4 border-l-blue-500 bg-blue-50">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center">
+                <Clock className="h-5 w-5 mr-2 text-blue-600" />
+                No Current Class
+              </CardTitle>
+              <CardDescription>
+                {userType === "student"
+                  ? "You don't have any class right now"
+                  : "You're not teaching any class right now"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>Check your schedule for upcoming classes.</p>
+              <Button variant="outline" size="sm" className="mt-2">
+                <Link href={userType === "student" ? "/class-schedule" : "/teacher-availability"}>View Schedule</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         <section className="mb-10">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold">Dashboard</h2>
@@ -120,7 +243,10 @@ export default function Home() {
                   <CardDescription>View class schedules and teachers</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-500">CSE A, B, C - 1st Year 2nd Semester</p>
+                  <p className="text-sm text-gray-500">
+                    {userType === "student" && userData?.section ? userData.section : "CSE A, B, C"} - 1st Year 2nd
+                    Semester
+                  </p>
                 </CardContent>
               </Card>
             </Link>
@@ -150,7 +276,16 @@ export default function Home() {
                   <CardDescription>Track your attendance records</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-500">Current attendance: 87%</p>
+                  <p className="text-sm text-gray-500">
+                    Current attendance:{" "}
+                    {userData?.attendance
+                      ? Math.round(
+                          Object.values(userData.attendance).reduce((sum, val) => sum + val, 0) /
+                            Object.values(userData.attendance).length,
+                        )
+                      : 87}
+                    %
+                  </p>
                 </CardContent>
               </Card>
             </Link>
@@ -236,31 +371,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="bg-gradient-to-r from-purple-600 to-pink-500 text-white py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              <h2 className="text-2xl font-bold flex items-center">
-                <Sparkles className="h-6 w-6 mr-2" />
-                Smart Campus Assistant
-              </h2>
-              <p className="opacity-80">Your complete campus management solution</p>
-            </div>
-            <div className="flex gap-4">
-              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600">
-                <Calendar className="h-4 w-4 mr-2" />
-                Academic Calendar
-              </Button>
-              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600">
-                <Users className="h-4 w-4 mr-2" />
-                Support
-              </Button>
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      <ChatbotButton />
+      <Footer />
     </div>
   )
 }
