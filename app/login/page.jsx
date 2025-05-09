@@ -194,23 +194,6 @@ export default function LoginPage() {
             </TabsContent>
           </Tabs>
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
-            <h3 className="text-sm font-medium text-blue-800 mb-2">Test Accounts</h3>
-            <div className="space-y-2 text-xs text-blue-700">
-              <p>
-                <strong>Student:</strong> ID: S001, Password: student123
-              </p>
-              <p>
-                <strong>Student:</strong> ID: S002, Password: student123
-              </p>
-              <p>
-                <strong>Teacher:</strong> Email: rohitrnps@gmail.com, Password: teacher123
-              </p>
-              <p>
-                <strong>Teacher:</strong> Email: shreyaranjan9431@gmail.com, Password: teacher123
-              </p>
-            </div>
-          </div>
           <div className="mt-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
             <div className="flex items-center gap-3 mb-2">
               <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
