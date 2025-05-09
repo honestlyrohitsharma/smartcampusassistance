@@ -31,6 +31,27 @@ export default function Footer() {
                   <a href="tel:+918294813136">8294813136</a>
                 </div>
               </div>
+              <div className="pt-2">
+                <p className="font-medium">Soukorsha Dutta</p>
+                <div className="flex items-center text-sm mt-1">
+                  <Phone className="h-4 w-4 mr-2" />
+                  <a href="tel:+919477494999">9477494999</a>
+                </div>
+              </div>
+              <div className="pt-2">
+                <p className="font-medium">Sk Sania Aktari</p>
+                <div className="flex items-center text-sm mt-1">
+                  <Phone className="h-4 w-4 mr-2" />
+                  <a href="tel:+919832006373">9832006373</a>
+                </div>
+              </div>
+              <div className="pt-2">
+                <p className="font-medium">Sanya Gayen</p>
+                <div className="flex items-center text-sm mt-1">
+                  <Phone className="h-4 w-4 mr-2" />
+                  <a href="tel:+917029953327">7029953327</a>
+                </div>
+              </div>
             </div>
           </div>
 

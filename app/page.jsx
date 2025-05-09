@@ -15,6 +15,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [currentClass, setCurrentClass] = useState(null)
   const [isClient, setIsClient] = useState(false)
+  const [currentDateTime, setCurrentDateTime] = useState(null)
   const router = useRouter()
 
   // First effect - Handle initial data loading and login check
@@ -32,6 +33,9 @@ export default function Home() {
         const parsedUserData = JSON.parse(storedUserData)
         setUserData(parsedUserData)
       }
+
+      // Set current date and time
+      setCurrentDateTime(new Date())
 
       setIsLoading(false)
     }
@@ -59,12 +63,14 @@ export default function Home() {
     }
   }, [userData, userType, isClient])
 
-  // Fourth effect - Set up interval for updating current class
+  // Fourth effect - Set up interval for updating current class and time
   useEffect(() => {
     if (!userData || !isClient) return
 
-    // Update current class every minute
+    // Update current class and time every minute
     const intervalId = setInterval(() => {
+      setCurrentDateTime(new Date())
+
       if (userType === "student" && userData.section) {
         const sectionKey = userData.section.toLowerCase()
         const currentClassInfo = getCurrentClass(sectionKey, "student")
@@ -85,6 +91,23 @@ export default function Home() {
   if (isClient && !userType) {
     return null // Will redirect to login
   }
+
+  // Format current date and time
+  const formattedDate = currentDateTime
+    ? currentDateTime.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : ""
+
+  const formattedTime = currentDateTime
+    ? currentDateTime.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : ""
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
@@ -124,7 +147,10 @@ export default function Home() {
               )}
             </div>
             <div className="hidden md:block">
-              <Button className="bg-white text-purple-600 hover:bg-white/90">View Schedule</Button>
+              <div className="text-right">
+                <div className="text-lg font-medium">{formattedDate}</div>
+                <div className="text-xl font-bold">{formattedTime}</div>
+              </div>
             </div>
           </div>
           <div className="mt-8 flex flex-wrap gap-4">
@@ -340,11 +366,11 @@ export default function Home() {
                       <Calendar className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="font-medium">Mid-term Examinations</p>
+                      <p className="font-medium">Even Semester Examination</p>
                       <p className="text-sm text-gray-500">All departments</p>
                     </div>
                   </div>
-                  <p className="text-sm font-medium text-gray-700">May 15 - May 25, 2025</p>
+                  <p className="text-sm font-medium text-gray-700">May 2 - May 15, 2025</p>
                 </li>
                 <li className="flex justify-between items-center p-3 hover:bg-purple-50 rounded-lg transition-colors">
                   <div className="flex items-start gap-3">
@@ -352,11 +378,11 @@ export default function Home() {
                       <Sparkles className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="font-medium">Tech Symposium</p>
-                      <p className="text-sm text-gray-500">Computer Science Department</p>
+                      <p className="font-medium">Campus Recruitment Drive</p>
+                      <p className="text-sm text-gray-500">Placement Cell</p>
                     </div>
                   </div>
-                  <p className="text-sm font-medium text-gray-700">May 10, 2025</p>
+                  <p className="text-sm font-medium text-gray-700">May 5, 2025</p>
                 </li>
                 <li className="flex justify-between items-center p-3 hover:bg-purple-50 rounded-lg transition-colors">
                   <div className="flex items-start gap-3">
@@ -364,11 +390,11 @@ export default function Home() {
                       <Users className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="font-medium">Campus Recruitment Drive</p>
-                      <p className="text-sm text-gray-500">Placement Cell</p>
+                      <p className="font-medium">Summer Internship Program</p>
+                      <p className="text-sm text-gray-500">Computer Science Department</p>
                     </div>
                   </div>
-                  <p className="text-sm font-medium text-gray-700">May 5, 2025</p>
+                  <p className="text-sm font-medium text-gray-700">May 25, 2025</p>
                 </li>
               </ul>
             </CardContent>

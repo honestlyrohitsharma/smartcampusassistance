@@ -25,6 +25,7 @@ export default function AttendancePage() {
   const [attendancePercentage, setAttendancePercentage] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [isClient, setIsClient] = useState(false)
+  const [currentDate, setCurrentDate] = useState(null)
 
   useEffect(() => {
     setIsClient(true)
@@ -48,6 +49,9 @@ export default function AttendancePage() {
       } else {
         setAttendancePercentage(87) // Default
       }
+
+      // Set current date
+      setCurrentDate(new Date())
     }
 
     setIsLoading(false)
@@ -81,13 +85,13 @@ export default function AttendancePage() {
       }))
     }
 
-    // Default chart data
+    // Default chart data based on the timetable subjects
     return [
-      { subject: "Database Systems", attendance: 85 },
-      { subject: "Web Technologies", attendance: 92 },
-      { subject: "Artificial Intelligence", attendance: 78 },
-      { subject: "Operating Systems", attendance: 88 },
-      { subject: "Computer Networks", attendance: 95 },
+      { subject: "ESCS 201 (Programming)", attendance: 85 },
+      { subject: "HMHU 201 (English)", attendance: 92 },
+      { subject: "BSCH 201 (Chemistry)", attendance: 78 },
+      { subject: "BSM 201 (Mathematics)", attendance: 88 },
+      { subject: "ESME 291 (Drawing Lab)", attendance: 95 },
     ]
   }
 
@@ -112,7 +116,7 @@ export default function AttendancePage() {
     }
 
     return {
-      subject: "Artificial Intelligence",
+      subject: "BSCH 201 (Chemistry)",
       percentage: 78,
     }
   }
@@ -268,8 +272,9 @@ export default function AttendancePage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Courses</SelectItem>
-                    <SelectItem value="cs301">CS301: Database Systems</SelectItem>
-                    <SelectItem value="cs350">CS350: Web Technologies</SelectItem>
+                    <SelectItem value="escs201">ESCS 201: Programming</SelectItem>
+                    <SelectItem value="hmhu201">HMHU 201: English</SelectItem>
+                    <SelectItem value="bsm201">BSM 201: Mathematics</SelectItem>
                   </SelectContent>
                 </Select>
               </CardHeader>
