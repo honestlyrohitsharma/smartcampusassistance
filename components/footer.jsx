@@ -46,7 +46,7 @@ export default function Footer() {
                 </div>
               </div>
               <div className="pt-2">
-                <p className="font-medium">Sanya Gayen</p>
+                <p className="font-medium">Sania Gayen</p>
                 <div className="flex items-center text-sm mt-1">
                   <Phone className="h-4 w-4 mr-2" />
                   <a href="tel:+917029953327">7029953327</a>

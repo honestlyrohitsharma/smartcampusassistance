@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <UserAwareNavigation />
-          {children}
+          <div className="animate-in fade-in duration-500">{children}</div>
         </ThemeProvider>
       </body>
     </html>

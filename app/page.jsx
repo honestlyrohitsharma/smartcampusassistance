@@ -234,8 +234,8 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Link href="/assignments" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow border-l-4 border-l-blue-500">
+            <Link href="/assignments" className="block transform transition-transform duration-300 hover:scale-105">
+              <Card className="h-full hover:shadow-lg transition-all duration-300 border-l-4 border-l-blue-500">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <BookOpen className="h-5 w-5 mr-2 text-blue-600" />
@@ -249,8 +249,8 @@ export default function Home() {
               </Card>
             </Link>
 
-            <Link href="/notices" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow border-l-4 border-l-amber-500">
+            <Link href="/notices" className="block transform transition-transform duration-300 hover:scale-105">
+              <Card className="h-full hover:shadow-lg transition-all duration-300 border-l-4 border-l-amber-500">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Bell className="h-5 w-5 mr-2 text-amber-600" />
@@ -264,8 +264,8 @@ export default function Home() {
               </Card>
             </Link>
 
-            <Link href="/class-timetable" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow border-l-4 border-l-indigo-500">
+            <Link href="/class-timetable" className="block transform transition-transform duration-300 hover:scale-105">
+              <Card className="h-full hover:shadow-lg transition-all duration-300 border-l-4 border-l-indigo-500">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Clock className="h-5 w-5 mr-2 text-indigo-600" />
@@ -282,8 +282,8 @@ export default function Home() {
               </Card>
             </Link>
 
-            <Link href="/campus-map" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow border-l-4 border-l-green-500">
+            <Link href="/campus-map" className="block transform transition-transform duration-300 hover:scale-105">
+              <Card className="h-full hover:shadow-lg transition-all duration-300 border-l-4 border-l-green-500">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <MapPin className="h-5 w-5 mr-2 text-green-600" />
@@ -297,8 +297,8 @@ export default function Home() {
               </Card>
             </Link>
 
-            <Link href="/attendance" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow border-l-4 border-l-purple-500">
+            <Link href="/attendance" className="block transform transition-transform duration-300 hover:scale-105">
+              <Card className="h-full hover:shadow-lg transition-all duration-300 border-l-4 border-l-purple-500">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <UserCheck className="h-5 w-5 mr-2 text-purple-600" />
@@ -322,8 +322,11 @@ export default function Home() {
             </Link>
 
             {userType === "student" ? (
-              <Link href="/class-schedule" className="block">
-                <Card className="h-full hover:shadow-lg transition-shadow border-l-4 border-l-rose-500">
+              <Link
+                href="/class-schedule"
+                className="block transform transition-transform duration-300 hover:scale-105"
+              >
+                <Card className="h-full hover:shadow-lg transition-all duration-300 border-l-4 border-l-rose-500">
                   <CardHeader>
                     <CardTitle className="flex items-center">
                       <Calendar className="h-5 w-5 mr-2 text-rose-600" />
@@ -337,8 +340,11 @@ export default function Home() {
                 </Card>
               </Link>
             ) : (
-              <Link href="/student-attendance" className="block">
-                <Card className="h-full hover:shadow-lg transition-shadow border-l-4 border-l-rose-500">
+              <Link
+                href="/student-attendance"
+                className="block transform transition-transform duration-300 hover:scale-105"
+              >
+                <Card className="h-full hover:shadow-lg transition-all duration-300 border-l-4 border-l-rose-500">
                   <CardHeader>
                     <CardTitle className="flex items-center">
                       <FileText className="h-5 w-5 mr-2 text-rose-600" />
@@ -360,7 +366,7 @@ export default function Home() {
           <Card className="border border-purple-100 shadow-md">
             <CardContent className="p-6">
               <ul className="space-y-4">
-                <li className="flex justify-between items-center p-3 hover:bg-purple-50 rounded-lg transition-colors">
+                <li className="flex justify-between items-center p-3 hover:bg-purple-50 rounded-lg transition-all duration-300 hover:shadow-md transform hover:-translate-y-1">
                   <div className="flex items-start gap-3">
                     <div className="bg-purple-100 text-purple-700 p-2 rounded-lg">
                       <Calendar className="h-5 w-5" />
@@ -372,7 +378,7 @@ export default function Home() {
                   </div>
                   <p className="text-sm font-medium text-gray-700">May 2 - May 15, 2025</p>
                 </li>
-                <li className="flex justify-between items-center p-3 hover:bg-purple-50 rounded-lg transition-colors">
+                <li className="flex justify-between items-center p-3 hover:bg-purple-50 rounded-lg transition-all duration-300 hover:shadow-md transform hover:-translate-y-1">
                   <div className="flex items-start gap-3">
                     <div className="bg-pink-100 text-pink-700 p-2 rounded-lg">
                       <Sparkles className="h-5 w-5" />
@@ -384,7 +390,7 @@ export default function Home() {
                   </div>
                   <p className="text-sm font-medium text-gray-700">May 5, 2025</p>
                 </li>
-                <li className="flex justify-between items-center p-3 hover:bg-purple-50 rounded-lg transition-colors">
+                <li className="flex justify-between items-center p-3 hover:bg-purple-50 rounded-lg transition-all duration-300 hover:shadow-md transform hover:-translate-y-1">
                   <div className="flex items-start gap-3">
                     <div className="bg-blue-100 text-blue-700 p-2 rounded-lg">
                       <Users className="h-5 w-5" />

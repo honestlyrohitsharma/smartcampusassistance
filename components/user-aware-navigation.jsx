@@ -29,6 +29,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+// Add import for RippleButton
+import { RippleButton } from "@/components/ripple-button"
 
 export default function UserAwareNavigation() {
   const [userType, setUserType] = useState(null)
@@ -173,9 +175,10 @@ export default function UserAwareNavigation() {
         </div>
       </div>
       <div className="container mx-auto px-4 pb-2">
+        {/* Replace a few buttons with RippleButton to demonstrate the effect */}
         <nav className="flex overflow-x-auto pb-2 gap-2 scrollbar-hide">
           <Link href="/">
-            <Button
+            <RippleButton
               variant={pathname === "/" ? "default" : "outline"}
               size="sm"
               className={
@@ -185,10 +188,10 @@ export default function UserAwareNavigation() {
               }
             >
               Dashboard
-            </Button>
+            </RippleButton>
           </Link>
           <Link href="/assignments">
-            <Button
+            <RippleButton
               variant={pathname === "/assignments" ? "default" : "outline"}
               size="sm"
               className={
@@ -199,7 +202,7 @@ export default function UserAwareNavigation() {
             >
               <BookOpen className="h-4 w-4 mr-2" />
               <span className="hidden sm:inline">Assignments</span>
-            </Button>
+            </RippleButton>
           </Link>
           <Link href="/notices">
             <Button
@@ -207,8 +210,8 @@ export default function UserAwareNavigation() {
               size="sm"
               className={
                 pathname === "/notices"
-                  ? "bg-gradient-to-r from-purple-600 to-pink-500"
-                  : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-500 transition-all duration-300 hover:scale-105 active:scale-95"
+                  : "border-purple-200 text-purple-600 hover:bg-purple-50 transition-all duration-300 hover:scale-105 active:scale-95"
               }
             >
               <Bell className="h-4 w-4 mr-2" />
@@ -221,8 +224,8 @@ export default function UserAwareNavigation() {
               size="sm"
               className={
                 pathname === "/campus-map"
-                  ? "bg-gradient-to-r from-purple-600 to-pink-500"
-                  : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-500 transition-all duration-300 hover:scale-105 active:scale-95"
+                  : "border-purple-200 text-purple-600 hover:bg-purple-50 transition-all duration-300 hover:scale-105 active:scale-95"
               }
             >
               <MapPin className="h-4 w-4 mr-2" />
@@ -235,8 +238,8 @@ export default function UserAwareNavigation() {
               size="sm"
               className={
                 pathname === "/attendance"
-                  ? "bg-gradient-to-r from-purple-600 to-pink-500"
-                  : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-500 transition-all duration-300 hover:scale-105 active:scale-95"
+                  : "border-purple-200 text-purple-600 hover:bg-purple-50 transition-all duration-300 hover:scale-105 active:scale-95"
               }
             >
               <UserCheck className="h-4 w-4 mr-2" />
@@ -249,8 +252,8 @@ export default function UserAwareNavigation() {
               size="sm"
               className={
                 pathname === "/class-timetable"
-                  ? "bg-gradient-to-r from-purple-600 to-pink-500"
-                  : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-500 transition-all duration-300 hover:scale-105 active:scale-95"
+                  : "border-purple-200 text-purple-600 hover:bg-purple-50 transition-all duration-300 hover:scale-105 active:scale-95"
               }
             >
               <Clock className="h-4 w-4 mr-2" />
@@ -264,8 +267,8 @@ export default function UserAwareNavigation() {
                 size="sm"
                 className={
                   pathname === "/class-schedule"
-                    ? "bg-gradient-to-r from-purple-600 to-pink-500"
-                    : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                    ? "bg-gradient-to-r from-purple-600 to-pink-500 transition-all duration-300 hover:scale-105 active:scale-95"
+                    : "border-purple-200 text-purple-600 hover:bg-purple-50 transition-all duration-300 hover:scale-105 active:scale-95"
                 }
               >
                 <Calendar className="h-4 w-4 mr-2" />
@@ -280,8 +283,8 @@ export default function UserAwareNavigation() {
                   size="sm"
                   className={
                     pathname === "/teacher-availability"
-                      ? "bg-gradient-to-r from-purple-600 to-pink-500"
-                      : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                      ? "bg-gradient-to-r from-purple-600 to-pink-500 transition-all duration-300 hover:scale-105 active:scale-95"
+                      : "border-purple-200 text-purple-600 hover:bg-purple-50 transition-all duration-300 hover:scale-105 active:scale-95"
                   }
                 >
                   <Calendar className="h-4 w-4 mr-2" />
@@ -294,8 +297,8 @@ export default function UserAwareNavigation() {
                   size="sm"
                   className={
                     pathname === "/student-attendance"
-                      ? "bg-gradient-to-r from-purple-600 to-pink-500"
-                      : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                      ? "bg-gradient-to-r from-purple-600 to-pink-500 transition-all duration-300 hover:scale-105 active:scale-95"
+                      : "border-purple-200 text-purple-600 hover:bg-purple-50 transition-all duration-300 hover:scale-105 active:scale-95"
                   }
                 >
                   <FileText className="h-4 w-4 mr-2" />
@@ -308,8 +311,8 @@ export default function UserAwareNavigation() {
                   size="sm"
                   className={
                     pathname === "/set-availability"
-                      ? "bg-gradient-to-r from-purple-600 to-pink-500"
-                      : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                      ? "bg-gradient-to-r from-purple-600 to-pink-500 transition-all duration-300 hover:scale-105 active:scale-95"
+                      : "border-purple-200 text-purple-600 hover:bg-purple-50 transition-all duration-300 hover:scale-105 active:scale-95"
                   }
                 >
                   <Settings className="h-4 w-4 mr-2" />
@@ -324,8 +327,8 @@ export default function UserAwareNavigation() {
               size="sm"
               className={
                 pathname === "/test-login"
-                  ? "bg-gradient-to-r from-purple-600 to-pink-500"
-                  : "border-purple-200 text-purple-600 hover:bg-purple-50"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-500 transition-all duration-300 hover:scale-105 active:scale-95"
+                  : "border-purple-200 text-purple-600 hover:bg-purple-50 transition-all duration-300 hover:scale-105 active:scale-95"
               }
             >
               <User className="h-4 w-4 mr-2" />

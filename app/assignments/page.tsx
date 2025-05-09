@@ -10,6 +10,16 @@ import Footer from "@/components/footer"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+// Add import for the animated card components
+import {
+  AnimatedCard,
+  AnimatedCardHeader,
+  AnimatedCardTitle,
+  AnimatedCardDescription,
+  AnimatedCardContent,
+  AnimatedCardFooter,
+} from "@/components/animated-card"
+
 export default function AssignmentsPage() {
   const [userType, setUserType] = useState(null)
   const [userData, setUserData] = useState(null)
@@ -301,20 +311,20 @@ export default function AssignmentsPage() {
             // Student view
             <>
               <TabsContent value="pending">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 stagger-animation">
+                  <AnimatedCard delay={0.1}>
+                    <AnimatedCardHeader>
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle>Programming for Problem Solving</CardTitle>
-                          <CardDescription>ESCS 201: Abhijit Mitra</CardDescription>
+                          <AnimatedCardTitle>Programming for Problem Solving</AnimatedCardTitle>
+                          <AnimatedCardDescription>ESCS 201: Abhijit Mitra</AnimatedCardDescription>
                         </div>
                         <Badge variant="destructive" className="ml-2">
                           Due in 2 days
                         </Badge>
                       </div>
-                    </CardHeader>
-                    <CardContent>
+                    </AnimatedCardHeader>
+                    <AnimatedCardContent>
                       <p className="text-sm text-gray-500 mb-4">
                         Implement a C program to solve the given problem. Include proper documentation and test cases.
                       </p>
@@ -325,9 +335,13 @@ export default function AssignmentsPage() {
                       {selectedFile && (
                         <div className="mt-2 p-2 bg-blue-50 rounded-md text-sm">Selected file: {selectedFile.name}</div>
                       )}
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button variant="outline" size="sm">
+                    </AnimatedCardContent>
+                    <AnimatedCardFooter className="flex justify-between">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="transition-all duration-300 hover:scale-105 active:scale-95"
+                      >
                         <Download className="h-4 w-4 mr-2" />
                         Download Instructions
                       </Button>
@@ -335,31 +349,35 @@ export default function AssignmentsPage() {
                         <Input type="file" id="assignment-file" className="hidden" onChange={handleFileChange} />
                         <Label
                           htmlFor="assignment-file"
-                          className="cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3"
+                          className="cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 hover:scale-105 active:scale-95"
                         >
                           <Upload className="h-4 w-4 mr-2" />
                           Choose File
                         </Label>
-                        <Button size="sm" onClick={() => handleSubmitAssignment("CA2")}>
+                        <Button
+                          size="sm"
+                          onClick={() => handleSubmitAssignment("CA2")}
+                          className="transition-all duration-300 hover:scale-105 active:scale-95"
+                        >
                           Submit Assignment
                         </Button>
                       </div>
-                    </CardFooter>
-                  </Card>
+                    </AnimatedCardFooter>
+                  </AnimatedCard>
 
-                  <Card>
-                    <CardHeader>
+                  <AnimatedCard delay={0.2}>
+                    <AnimatedCardHeader>
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle>English Communication</CardTitle>
-                          <CardDescription>HMHU 201: Pallabi Gharami</CardDescription>
+                          <AnimatedCardTitle>English Communication</AnimatedCardTitle>
+                          <AnimatedCardDescription>HMHU 201: Pallabi Gharami</AnimatedCardDescription>
                         </div>
                         <Badge variant="destructive" className="ml-2">
                           Due in 5 days
                         </Badge>
                       </div>
-                    </CardHeader>
-                    <CardContent>
+                    </AnimatedCardHeader>
+                    <AnimatedCardContent>
                       <p className="text-sm text-gray-500 mb-4">
                         Write an essay on the topic "The Impact of Technology on Modern Communication". Include
                         references and follow proper formatting.
@@ -368,18 +386,22 @@ export default function AssignmentsPage() {
                         <Clock className="h-4 w-4 mr-1" />
                         <span>Due: May 20, 2025 at 11:59 PM</span>
                       </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button variant="outline" size="sm">
+                    </AnimatedCardContent>
+                    <AnimatedCardFooter className="flex justify-between">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="transition-all duration-300 hover:scale-105 active:scale-95"
+                      >
                         <Download className="h-4 w-4 mr-2" />
                         Download Instructions
                       </Button>
-                      <Button size="sm">
+                      <Button size="sm" className="transition-all duration-300 hover:scale-105 active:scale-95">
                         <Upload className="h-4 w-4 mr-2" />
                         Submit Assignment
                       </Button>
-                    </CardFooter>
-                  </Card>
+                    </AnimatedCardFooter>
+                  </AnimatedCard>
                 </div>
               </TabsContent>
 
