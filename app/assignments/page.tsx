@@ -25,6 +25,7 @@ export default function AssignmentsPage() {
   const [userData, setUserData] = useState(null)
   const [isClient, setIsClient] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
+  const [selectedFileEnglish, setSelectedFileEnglish] = useState(null)
   const [gradeValue, setGradeValue] = useState("")
   const [feedback, setFeedback] = useState("")
 
@@ -42,16 +43,26 @@ export default function AssignmentsPage() {
     }
   }, [])
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e, assignmentType) => {
     if (e.target.files.length > 0) {
-      setSelectedFile(e.target.files[0])
+      if (assignmentType === "programming") {
+        setSelectedFile(e.target.files[0])
+      } else if (assignmentType === "english") {
+        setSelectedFileEnglish(e.target.files[0])
+      }
     }
   }
 
-  const handleSubmitAssignment = (assignmentId) => {
-    if (selectedFile) {
-      alert(`Assignment submitted: ${selectedFile.name}`)
-      setSelectedFile(null)
+  const handleSubmitAssignment = (assignmentId, assignmentType) => {
+    const fileToSubmit = assignmentType === "programming" ? selectedFile : selectedFileEnglish
+
+    if (fileToSubmit) {
+      alert(`Assignment submitted: ${fileToSubmit.name}`)
+      if (assignmentType === "programming") {
+        setSelectedFile(null)
+      } else if (assignmentType === "english") {
+        setSelectedFileEnglish(null)
+      }
     } else {
       alert("Please select a file to upload")
     }
@@ -346,9 +357,14 @@ export default function AssignmentsPage() {
                         Download Instructions
                       </Button>
                       <div className="flex gap-2">
-                        <Input type="file" id="assignment-file" className="hidden" onChange={handleFileChange} />
+                        <Input
+                          type="file"
+                          id="assignment-file-programming"
+                          className="hidden"
+                          onChange={(e) => handleFileChange(e, "programming")}
+                        />
                         <Label
-                          htmlFor="assignment-file"
+                          htmlFor="assignment-file-programming"
                           className="cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 hover:scale-105 active:scale-95"
                         >
                           <Upload className="h-4 w-4 mr-2" />
@@ -356,7 +372,7 @@ export default function AssignmentsPage() {
                         </Label>
                         <Button
                           size="sm"
-                          onClick={() => handleSubmitAssignment("CA2")}
+                          onClick={() => handleSubmitAssignment("CA2", "programming")}
                           className="transition-all duration-300 hover:scale-105 active:scale-95"
                         >
                           Submit Assignment
@@ -386,6 +402,11 @@ export default function AssignmentsPage() {
                         <Clock className="h-4 w-4 mr-1" />
                         <span>Due: May 20, 2025 at 11:59 PM</span>
                       </div>
+                      {selectedFileEnglish && (
+                        <div className="mt-2 p-2 bg-blue-50 rounded-md text-sm">
+                          Selected file: {selectedFileEnglish.name}
+                        </div>
+                      )}
                     </AnimatedCardContent>
                     <AnimatedCardFooter className="flex justify-between">
                       <Button
@@ -396,10 +417,28 @@ export default function AssignmentsPage() {
                         <Download className="h-4 w-4 mr-2" />
                         Download Instructions
                       </Button>
-                      <Button size="sm" className="transition-all duration-300 hover:scale-105 active:scale-95">
-                        <Upload className="h-4 w-4 mr-2" />
-                        Submit Assignment
-                      </Button>
+                      <div className="flex gap-2">
+                        <Input
+                          type="file"
+                          id="assignment-file-english"
+                          className="hidden"
+                          onChange={(e) => handleFileChange(e, "english")}
+                        />
+                        <Label
+                          htmlFor="assignment-file-english"
+                          className="cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 hover:scale-105 active:scale-95"
+                        >
+                          <Upload className="h-4 w-4 mr-2" />
+                          Choose File
+                        </Label>
+                        <Button
+                          size="sm"
+                          onClick={() => handleSubmitAssignment("CA3", "english")}
+                          className="transition-all duration-300 hover:scale-105 active:scale-95"
+                        >
+                          Submit Assignment
+                        </Button>
+                      </div>
                     </AnimatedCardFooter>
                   </AnimatedCard>
                 </div>
